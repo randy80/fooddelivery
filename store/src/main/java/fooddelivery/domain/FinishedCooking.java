@@ -16,6 +16,7 @@ public class FinishedCooking extends AbstractEvent {
     private String userId;
     private String userName;
     private String userAddress;
+    private String storeOrderStatus;
 
     public FinishedCooking(StoreOrder aggregate) {
         super(aggregate);

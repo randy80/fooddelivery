@@ -40,13 +40,14 @@ public class Order {
     @PostPersist
     public void onPostPersist() {
         OrderPlaced orderPlaced = new OrderPlaced(this);
+        orderPlaced.setOrderStatus("OrderPlaced");
         orderPlaced.publishAfterCommit();
     }
 
     @PostUpdate
     public void onPostUpdate() {
-        PaymentCancelled paymentCancelled = new PaymentCancelled(this);
-        paymentCancelled.publishAfterCommit();
+//        PaymentCancelled paymentCancelled = new PaymentCancelled(this);
+//        paymentCancelled.publishAfterCommit();
     }
 
     @PreRemove
@@ -70,26 +71,16 @@ public class Order {
     }
 
     public static void paymentCancel(OrderCancelled orderCancelled) {
-        /** Example 1:  new item 
-        Order order = new Order();
-        repository().save(order);
-
-        PaymentCancelled paymentCancelled = new PaymentCancelled(order);
-        paymentCancelled.publishAfterCommit();
-        */
-
-        /** Example 2:  finding and process
+        /** Example 2:  finding and process */
         
-        repository().findById(orderCancelled.get???()).ifPresent(order->{
+        repository().findById(orderCancelled.getId()).ifPresent(order->{
             
-            order // do something
+            order.setOrderStatus("OrderCancelled");
             repository().save(order);
 
             PaymentCancelled paymentCancelled = new PaymentCancelled(order);
             paymentCancelled.publishAfterCommit();
 
          });
-        */
-
     }
 }

@@ -35,13 +35,7 @@ public class StoreOrder {
 
     @PostPersist
     public void onPostPersist() {
-        OrderInformationReceived orderInformationReceived = new OrderInformationReceived(
-            this
-        );
-        orderInformationReceived.publishAfterCommit();
 
-        StoreOrderCancelled storeOrderCancelled = new StoreOrderCancelled(this);
-        storeOrderCancelled.publishAfterCommit();
     }
 
     public static StoreOrderRepository repository() {
@@ -53,69 +47,57 @@ public class StoreOrder {
 
     public void orderAccept() {
         OrderAccepted orderAccepted = new OrderAccepted(this);
+        orderAccepted.setStoreOrderStatus("OrderAccepted");
         orderAccepted.publishAfterCommit();
     }
 
     public void orderReject() {
         OrderRejected orderRejected = new OrderRejected(this);
+        orderRejected.setStoreOrderStatus("OrderRejected");
         orderRejected.publishAfterCommit();
     }
 
     public void startCooking() {
         StartedCooking startedCooking = new StartedCooking(this);
+        startedCooking.setStoreOrderStatus("StartedCooking");
         startedCooking.publishAfterCommit();
     }
 
     public void finishCooking() {
         FinishedCooking finishedCooking = new FinishedCooking(this);
+        finishedCooking.setStoreOrderStatus("FinishedCooking");
         finishedCooking.publishAfterCommit();
     }
 
     public static void orderInformationReceive(Paid paid) {
-        /** Example 1:  new item 
+        /** Example 1:  new item */
         StoreOrder storeOrder = new StoreOrder();
+        storeOrder.setOrderId(paid.getId());
+        storeOrder.setUserId(paid.getUserId());
+        storeOrder.setUserName(paid.getUserName());
+        storeOrder.setUserAddress(paid.getUserAddress());
+        storeOrder.setProductId(paid.getProductId());
+        storeOrder.setProductName(paid.getProductName());
+        storeOrder.setQty(paid.getQty());
+        storeOrder.setStoreOrderStatus("StoreOrderPlaced");
         repository().save(storeOrder);
 
         OrderInformationReceived orderInformationReceived = new OrderInformationReceived(storeOrder);
         orderInformationReceived.publishAfterCommit();
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(paid.get???()).ifPresent(storeOrder->{
-            
-            storeOrder // do something
-            repository().save(storeOrder);
-
-            OrderInformationReceived orderInformationReceived = new OrderInformationReceived(storeOrder);
-            orderInformationReceived.publishAfterCommit();
-
-         });
-        */
-
     }
 
     public static void storeOrderCancel(PaymentCancelled paymentCancelled) {
-        /** Example 1:  new item 
-        StoreOrder storeOrder = new StoreOrder();
-        repository().save(storeOrder);
-
-        StoreOrderCancelled storeOrderCancelled = new StoreOrderCancelled(storeOrder);
-        storeOrderCancelled.publishAfterCommit();
-        */
-
-        /** Example 2:  finding and process
+        /** Example 2:  finding and process */
         
-        repository().findById(paymentCancelled.get???()).ifPresent(storeOrder->{
+        repository().findById(paymentCancelled.getId()).ifPresent(storeOrder->{
             
-            storeOrder // do something
+            storeOrder.setStoreOrderStatus("StoreOrderCancelled");
             repository().save(storeOrder);
 
             StoreOrderCancelled storeOrderCancelled = new StoreOrderCancelled(storeOrder);
             storeOrderCancelled.publishAfterCommit();
 
          });
-        */
 
     }
 }

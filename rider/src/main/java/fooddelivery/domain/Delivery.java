@@ -34,8 +34,8 @@ public class Delivery {
 
     @PostPersist
     public void onPostPersist() {
-        DeliveryPrepared deliveryPrepared = new DeliveryPrepared(this);
-        deliveryPrepared.publishAfterCommit();
+//        DeliveryPrepared deliveryPrepared = new DeliveryPrepared(this);
+//        deliveryPrepared.publishAfterCommit();
     }
 
     public static DeliveryRepository repository() {
@@ -47,35 +47,35 @@ public class Delivery {
 
     public void deliveryComplete() {
         DeliveryCompleted deliveryCompleted = new DeliveryCompleted(this);
+        deliveryCompleted.setDeliveryStatus("DeliveryCompleted");
         deliveryCompleted.publishAfterCommit();
     }
 
     public void deliveryStart() {
         DeliveryStarted deliveryStarted = new DeliveryStarted(this);
+        deliveryStarted.setDeliveryStatus("DeliveryStarted");
         deliveryStarted.publishAfterCommit();
     }
 
     public static void deliveryPrepare(FinishedCooking finishedCooking) {
-        /** Example 1:  new item 
-        Delivery delivery = new Delivery();
-        repository().save(delivery);
 
-        DeliveryPrepared deliveryPrepared = new DeliveryPrepared(delivery);
-        deliveryPrepared.publishAfterCommit();
-        */
+        /** Example 2:  finding and process */
 
-        /** Example 2:  finding and process
-        
-        repository().findById(finishedCooking.get???()).ifPresent(delivery->{
-            
-            delivery // do something
+        repository().findById(finishedCooking.getId()).ifPresent(delivery->{
+
+            delivery.orderId = finishedCooking.getOrderId();
+            delivery.productId = finishedCooking.getProductId();
+            delivery.productName = finishedCooking.getProductName();
+            delivery.deliveryStatus = "DeliveryPrepared";
+            delivery.userId = finishedCooking.getUserId();
+            delivery.userName = finishedCooking.getUserName();
+            delivery.userAddress = finishedCooking.getUserAddress();
             repository().save(delivery);
 
             DeliveryPrepared deliveryPrepared = new DeliveryPrepared(delivery);
             deliveryPrepared.publishAfterCommit();
 
          });
-        */
 
     }
 }
