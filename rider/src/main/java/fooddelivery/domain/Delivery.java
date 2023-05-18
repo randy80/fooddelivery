@@ -58,24 +58,20 @@ public class Delivery {
     }
 
     public static void deliveryPrepare(FinishedCooking finishedCooking) {
+        /** Example 1:  new item */
+        Delivery delivery = new Delivery();
 
-        /** Example 2:  finding and process */
+        delivery.orderId = finishedCooking.getOrderId();
+        delivery.productId = finishedCooking.getProductId();
+        delivery.productName = finishedCooking.getProductName();
+        delivery.deliveryStatus = "DeliveryPrepared";
+        delivery.userId = finishedCooking.getUserId();
+        delivery.userName = finishedCooking.getUserName();
+        delivery.userAddress = finishedCooking.getUserAddress();
+        repository().save(delivery);
 
-        repository().findById(finishedCooking.getId()).ifPresent(delivery->{
-
-            delivery.orderId = finishedCooking.getOrderId();
-            delivery.productId = finishedCooking.getProductId();
-            delivery.productName = finishedCooking.getProductName();
-            delivery.deliveryStatus = "DeliveryPrepared";
-            delivery.userId = finishedCooking.getUserId();
-            delivery.userName = finishedCooking.getUserName();
-            delivery.userAddress = finishedCooking.getUserAddress();
-            repository().save(delivery);
-
-            DeliveryPrepared deliveryPrepared = new DeliveryPrepared(delivery);
-            deliveryPrepared.publishAfterCommit();
-
-         });
+        DeliveryPrepared deliveryPrepared = new DeliveryPrepared(delivery);
+        deliveryPrepared.publishAfterCommit();
 
     }
 }
