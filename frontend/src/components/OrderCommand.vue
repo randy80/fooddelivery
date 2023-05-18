@@ -1,0 +1,74 @@
+<template>
+
+    <v-card outlined>
+        <v-card-title>
+            Order
+        </v-card-title>
+
+        <v-card-text>
+            <Number label="Id" v-model="value.id" :editMode="editMode"/>
+            <String label="UserId" v-model="value.userId" :editMode="editMode"/>
+            <String label="UserName" v-model="value.userName" :editMode="editMode"/>
+            <String label="UserAddress" v-model="value.userAddress" :editMode="editMode"/>
+            <Number label="ProductId" v-model="value.productId" :editMode="editMode"/>
+            <String label="ProductName" v-model="value.productName" :editMode="editMode"/>
+            <Number label="Qty" v-model="value.qty" :editMode="editMode"/>
+        </v-card-text>
+
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                    color="deep-purple lighten-2"
+                    text
+                    @click="order"
+            >
+                Order
+            </v-btn>
+            
+            <v-btn
+                    color="deep-purple lighten-2"
+                    text
+                    @click="close"
+            >
+                Close
+            </v-btn>
+        </v-card-actions>
+    </v-card>
+
+</template>
+
+<script>
+   
+    export default {
+        name: 'OrderCommand',
+        components:{},
+        props: {},
+        data: () => ({
+            editMode: true,
+            value: {},
+        }),
+        created() {
+            this.value.id = 0;
+            this.value.userId = '';
+            this.value.userName = '';
+            this.value.userAddress = '';
+            this.value.productId = 0;
+            this.value.productName = '';
+            this.value.qty = 0;
+        },
+        watch: {
+        },
+        methods: {
+            order() {
+                this.$emit('order', this.value);
+            },
+            close() {
+                this.$emit('closeDialog');
+            },
+            change() {
+                this.$emit('input', this.value);
+            },
+        }
+    }
+</script>
+
